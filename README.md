@@ -1,5 +1,5 @@
-# Tacotron2 + WaveGlow
-Tacotron2 + WaveGLow based Text to speech
+# Tacotron2 + WaveGlow + GST
+Tacotron2 + WaveGLow based Text to speech with gloable style tokens 
 
 
 **Tacotron2 model architecture**
