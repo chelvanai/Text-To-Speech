@@ -8,6 +8,7 @@ from stft import STFT
 class LinearNorm(torch.nn.Module):
     def __init__(self, in_dim, out_dim, bias=True, w_init_gain='linear'):
         super(LinearNorm, self).__init__()
+
         self.linear_layer = torch.nn.Linear(in_dim, out_dim, bias=bias)
 
         torch.nn.init.xavier_uniform_(

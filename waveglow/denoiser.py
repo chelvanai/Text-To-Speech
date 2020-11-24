@@ -1,4 +1,5 @@
 import sys
+
 sys.path.append('tacotron2')
 import torch
 from layers import STFT
@@ -11,7 +12,7 @@ class Denoiser(torch.nn.Module):
                  win_length=1024, mode='zeros'):
         super(Denoiser, self).__init__()
         self.stft = STFT(filter_length=filter_length,
-                         hop_length=int(filter_length/n_overlap),
+                         hop_length=int(filter_length / n_overlap),
                          win_length=win_length).cuda()
         if mode == 'zeros':
             mel_input = torch.zeros(

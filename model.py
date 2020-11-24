@@ -12,10 +12,12 @@ class LocationLayer(nn.Module):
                  attention_dim):
         super(LocationLayer, self).__init__()
         padding = int((attention_kernel_size - 1) / 2)
+
         self.location_conv = ConvNorm(2, attention_n_filters,
                                       kernel_size=attention_kernel_size,
                                       padding=padding, bias=False, stride=1,
                                       dilation=1)
+
         self.location_dense = LinearNorm(attention_n_filters, attention_dim,
                                          bias=False, w_init_gain='tanh')
 
@@ -30,14 +32,19 @@ class Attention(nn.Module):
     def __init__(self, attention_rnn_dim, embedding_dim, attention_dim,
                  attention_location_n_filters, attention_location_kernel_size):
         super(Attention, self).__init__()
+
         self.query_layer = LinearNorm(attention_rnn_dim, attention_dim,
                                       bias=False, w_init_gain='tanh')
+
         self.memory_layer = LinearNorm(embedding_dim, attention_dim, bias=False,
                                        w_init_gain='tanh')
+
         self.v = LinearNorm(attention_dim, 1, bias=False)
+
         self.location_layer = LocationLayer(attention_location_n_filters,
                                             attention_location_kernel_size,
                                             attention_dim)
+
         self.score_mask_value = -float("inf")
 
     def get_alignment_energies(self, query, processed_memory,
@@ -107,6 +114,7 @@ class Postnet(nn.Module):
 
     def __init__(self, hparams):
         super(Postnet, self).__init__()
+
         self.convolutions = nn.ModuleList()
 
         self.convolutions.append(
@@ -136,7 +144,7 @@ class Postnet(nn.Module):
                          padding=int((hparams.postnet_kernel_size - 1) / 2),
                          dilation=1, w_init_gain='linear'),
                 nn.BatchNorm1d(hparams.n_mel_channels))
-            )
+        )
 
     def forward(self, x):
         for i in range(len(self.convolutions) - 1):
@@ -151,11 +159,14 @@ class Encoder(nn.Module):
         - Three 1-d convolution banks
         - Bidirectional LSTM
     """
+
     def __init__(self, hparams):
         super(Encoder, self).__init__()
 
         convolutions = []
+
         for _ in range(hparams.encoder_n_convolutions):
+
             conv_layer = nn.Sequential(
                 ConvNorm(hparams.encoder_embedding_dim,
                          hparams.encoder_embedding_dim,
@@ -164,6 +175,7 @@ class Encoder(nn.Module):
                          dilation=1, w_init_gain='relu'),
                 nn.BatchNorm1d(hparams.encoder_embedding_dim))
             convolutions.append(conv_layer)
+
         self.convolutions = nn.ModuleList(convolutions)
 
         self.lstm = nn.LSTM(hparams.encoder_embedding_dim,
@@ -303,7 +315,7 @@ class Decoder(nn.Module):
         decoder_inputs = decoder_inputs.transpose(1, 2)
         decoder_inputs = decoder_inputs.view(
             decoder_inputs.size(0),
-            int(decoder_inputs.size(1)/self.n_frames_per_step), -1)
+            int(decoder_inputs.size(1) / self.n_frames_per_step), -1)
         # (B, T_out, n_mel_channels) -> (T_out, B, n_mel_channels)
         decoder_inputs = decoder_inputs.transpose(0, 1)
         return decoder_inputs
@@ -461,8 +473,10 @@ class Tacotron2(nn.Module):
         self.fp16_run = hparams.fp16_run
         self.n_mel_channels = hparams.n_mel_channels
         self.n_frames_per_step = hparams.n_frames_per_step
+
         self.embedding = nn.Embedding(
             hparams.n_symbols, hparams.symbols_embedding_dim)
+
         std = sqrt(2.0 / (hparams.n_symbols + hparams.symbols_embedding_dim))
         val = sqrt(3.0) * std  # uniform bounds for std
         self.embedding.weight.data.uniform_(-val, val)
@@ -472,7 +486,7 @@ class Tacotron2(nn.Module):
 
     def parse_batch(self, batch):
         text_padded, input_lengths, mel_padded, gate_padded, \
-            output_lengths = batch
+        output_lengths = batch
         text_padded = to_gpu(text_padded).long()
         input_lengths = to_gpu(input_lengths).long()
         max_len = torch.max(input_lengths.data).item()
