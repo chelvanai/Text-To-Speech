@@ -10,7 +10,7 @@ Tacotron2 + WaveGLow based Text to speech
 
 ![Encoder of Tacotron2](images/p1.png)
 
-**Attention layer and with location sensitive attention**
+**Decoder with location sesitive attention**
 
 ![Encoder of Tacotron2](images/p2.png)
 
