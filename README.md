@@ -6,20 +6,22 @@ Tacotron2 + WaveGLow based Text to speech with gloable style tokens
 
 ![Tacotron2 model](images/Tacotron2.png)
 
+
 _The network is made of an encoder and a decoder with attention. The encoder uses a
 character sequence and turns it into a feature representation. The input characters are
 described using a 512-dimensional character embedding, which is given through a
 stack of 3 convolutional layers. The convolutional layers improve in modeling longterm context. The output of the final layer is then fed to a unique bi-directional
 LSTM, producing encoded features. The encoder output is consumed by an attention
-network which compiles it into a fixed-length context vector.
+network which compiles it into a fixed-length context vector._
 
-The decoder is an autoregressive recurrent neural network that predicts a Mel
+_The decoder is an autoregressive recurrent neural network that predicts a Mel
 spectrogram from encoded sequences. The prediction of the earlier time step is passed
 over 2 fully connected layers or pre-net. The pre-net output and attention context
 vector are concatenated and passed into a stack of 2 unidirectional LSTM layers. The
 connection of LSTM output and the attention context is measured through a linear
 transform to predict the victim spectrogram frame. Ultimately, the predicted Melspectrogram is fed to a 5-layer convolutional Postnet which predicts a residual
 connection to add to the prediction to increase the overall regeneration_
+
 
 **Encoder part of Tacotron2 model**
 
