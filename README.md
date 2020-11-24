@@ -56,3 +56,31 @@ Tacotron2 + WaveGLow based Text to speech
 **Finnaly another CNN module enhance the decode output with help of postnet(CNN)**
 
 
+    def forward(self, inputs):
+        text_inputs, text_lengths, mels, max_len, output_lengths = inputs
+        text_lengths, output_lengths = text_lengths.data, output_lengths.data
+
+        embedded_inputs = self.embedding(text_inputs).transpose(1, 2)
+
+        encoder_outputs = self.encoder(embedded_inputs, text_lengths)
+
+        mel_outputs, gate_outputs, alignments = self.decoder(
+            encoder_outputs, mels, memory_lengths=text_lengths)
+
+        mel_outputs_postnet = self.postnet(mel_outputs)
+        
+        mel_outputs_postnet = mel_outputs + mel_outputs_postnet
+
+        return self.parse_output(
+            [mel_outputs, mel_outputs_postnet, gate_outputs, alignments],
+            output_lengths)
+
+
+1. Embedding layer encode the sentence
+2. The embedding vector fed into **Encoder** module and generate future vector of the senetece.
+3. The encoded context vector fed into decoder with mel spectgram. so the decoder run through attention layers and mapping the encoder context with mel spectrogram.
+4. After the mel outputs fed into postnet, it will enhance the output.
+5. finnaly it will update the weight parameter
+
+**in this way many epoch it will map and learn the text to mel spectrogram relations.** 
+ 
