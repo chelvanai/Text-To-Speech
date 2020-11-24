@@ -6,6 +6,8 @@ Tacotron2 + WaveGLow based Text to speech with gloable style tokens
 
 ![Tacotron2 model](images/Tacotron2.png)
 
+![Tacotron2 model](images/tact.png)
+
 
 _The network is made of an encoder and a decoder with attention. The encoder uses a
 character sequence and turns it into a feature representation. The input characters are
