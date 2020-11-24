@@ -1,4 +1,4 @@
-# Text-To-Speech
+# Tacotron2 + WaveGlow
 Tacotron2 + WaveGLow based Text to speech
 
 
